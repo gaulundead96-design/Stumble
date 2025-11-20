@@ -1,0 +1,59 @@
+.stumble-form {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.stumble-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 1rem;
+  color: white;
+  font-size: 1.1rem;
+  outline: none;
+}
+
+.stumble-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.stumble-button {
+  background: linear-gradient(135deg, #ff00cc 0%, #333399 100%);
+  border: none;
+  padding: 0 2rem;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stumble-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.stumble-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  .stumble-form {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .stumble-button {
+    padding: 1rem;
+    width: 100%;
+  }
+}

@@ -1,0 +1,64 @@
+import React, { useState } from 'react';
+import StumbleInput from './components/StumbleInput';
+import { sites } from './data/sites';
+import './App.css';
+
+function App() {
+  const [lastSite, setLastSite] = useState(null);
+  const [message, setMessage] = useState('');
+
+  const handleStumble = (topic) => {
+    let category = 'random';
+    let searchTopic = topic.toLowerCase().trim();
+
+    if (searchTopic && sites[searchTopic]) {
+      category = searchTopic;
+    } else if (searchTopic) {
+      // Try to find partial match
+      const foundKey = Object.keys(sites).find(key => key.includes(searchTopic) || searchTopic.includes(key));
+      if (foundKey) {
+        category = foundKey;
+      } else {
+        setMessage(`We don't have a curated list for "${topic}" yet, but here's something random!`);
+        setTimeout(() => setMessage(''), 3000);
+      }
+    }
+
+    const list = sites[category];
+    const randomSite = list[Math.floor(Math.random() * list.length)];
+
+    setLastSite(randomSite);
+    window.open(randomSite, '_blank');
+  };
+
+  return (
+    <div className="app-container">
+      <div className="content">
+        <h1 className="title">Stumble<span className="highlight">Upon</span> 2.0</h1>
+        <p className="subtitle">Discover the weird, wonderful, and small web.</p>
+
+        <div className="input-container">
+          <StumbleInput onStumble={handleStumble} />
+        </div>
+
+        {message && <div className="message">{message}</div>}
+
+        <div className="tags">
+          <p>Popular topics:</p>
+          <div className="tag-list">
+            {Object.keys(sites).filter(k => k !== 'random').map(tag => (
+              <span key={tag} className="tag" onClick={() => handleStumble(tag)}>
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="background-orb orb-1"></div>
+      <div className="background-orb orb-2"></div>
+    </div>
+  );
+}
+
+export default App;
