@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import './StumbleInput.css';
 
-const StumbleInput = ({ onStumble }) => {
-    const [topic, setTopic] = useState('');
-
+const StumbleInput = ({ onStumble, topic, setTopic }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onStumble(topic);

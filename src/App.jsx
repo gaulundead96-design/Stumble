@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import StumbleInput from './components/StumbleInput';
+import UserMenu from './components/UserMenu';
 import { sites } from './data/sites';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { saveVisit } from './services/historyService';
 import './App.css';
 
-function App() {
+function AppContent() {
   const [lastSite, setLastSite] = useState(null);
   const [message, setMessage] = useState('');
+  const [currentTopic, setCurrentTopic] = useState('');
+  const { currentUser } = useAuth();
 
   const handleStumble = (topic) => {
     let category = 'random';
@@ -29,16 +34,29 @@ function App() {
 
     setLastSite(randomSite);
     window.open(randomSite, '_blank');
+
+    if (currentUser) {
+      saveVisit(currentUser.uid, randomSite, category);
+    }
+  };
+
+  const handleTagClick = (tag) => {
+    setCurrentTopic(tag);
   };
 
   return (
     <div className="app-container">
+      <UserMenu />
       <div className="content">
         <h1 className="title">Stumble<span className="highlight">Upon</span> 2.0</h1>
         <p className="subtitle">Discover the weird, wonderful, and small web.</p>
 
         <div className="input-container">
-          <StumbleInput onStumble={handleStumble} />
+          <StumbleInput
+            onStumble={handleStumble}
+            topic={currentTopic}
+            setTopic={setCurrentTopic}
+          />
         </div>
 
         {message && <div className="message">{message}</div>}
@@ -47,7 +65,11 @@ function App() {
           <p>Popular topics:</p>
           <div className="tag-list">
             {Object.keys(sites).filter(k => k !== 'random').map(tag => (
-              <span key={tag} className="tag" onClick={() => handleStumble(tag)}>
+              <span
+                key={tag}
+                className={`tag ${currentTopic === tag ? 'selected' : ''}`}
+                onClick={() => handleTagClick(tag)}
+              >
                 #{tag}
               </span>
             ))}
@@ -58,6 +80,14 @@ function App() {
       <div className="background-orb orb-1"></div>
       <div className="background-orb orb-2"></div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
